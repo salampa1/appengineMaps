@@ -6,7 +6,17 @@
             30
         </session-timeout>
     </session-config>
+    
+    <servlet>
+        <servlet-name>intel</servlet-name>
+        <servlet-class>com.fel.appenginemaps.servlets.IntelServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>intel</servlet-name>
+        <url-pattern>/intel</url-pattern>
+    </servlet-mapping>
+
     <welcome-file-list>
         <welcome-file>index.jsp</welcome-file>
-        </welcome-file-list>
-    </web-app>
+    </welcome-file-list>
+</web-app>
