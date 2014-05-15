@@ -4,7 +4,7 @@
     <version>${appengine.app.version}</version>
     <threadsafe>false</threadsafe>
     
-    <module>frontend</module>
+    <module>default</module>
     
     <system-properties>
         <property name="java.util.logging.config.file" value="WEB-INF/logging.properties"/>
