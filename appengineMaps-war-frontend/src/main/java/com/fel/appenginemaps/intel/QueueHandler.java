@@ -23,7 +23,7 @@ import javax.servlet.http.HttpServletResponse;
 public class QueueHandler {
     
     TimeGrid timegrid;
-    public static final int SMUGGLERS_PER_TASK = 5;
+    public static final int SMUGGLERS_PER_TASK = 50;
     
     public TimeGrid provideIntel(int taskCount, HttpServletResponse resp) throws IOException {
         Queue queue;

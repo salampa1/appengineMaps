@@ -10,6 +10,7 @@ import com.google.appengine.api.taskqueue.TransientFailureException;
 import com.google.appengine.api.utils.SystemProperty;
 import com.google.apphosting.api.ApiProxy.ApiDeadlineExceededException;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.Future;
@@ -23,7 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 
 public class IntelServlet extends HttpServlet {
     
-    static int TASKS = 70;
+    static int TASKS = 40;
 
     @Override
     public void doGet(HttpServletRequest req, HttpServletResponse resp)
@@ -41,7 +42,7 @@ public class IntelServlet extends HttpServlet {
         
         resp.getWriter().println((System.currentTimeMillis() - t)/1000d +" seconds." );
         
-        Gson g = new Gson();
+        Gson g = new GsonBuilder().setPrettyPrinting().create();
         
         resp.getWriter().println(g.toJson(intel));
 
