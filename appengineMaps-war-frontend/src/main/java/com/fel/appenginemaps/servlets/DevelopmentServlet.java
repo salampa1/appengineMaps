@@ -5,14 +5,16 @@ import com.google.appengine.api.taskqueue.QueueFactory;
 import com.google.appengine.api.taskqueue.TaskOptions;
 import com.google.appengine.api.utils.SystemProperty;
 import java.io.IOException;
-import java.util.Properties;
-
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class BackendServlet extends HttpServlet {
-    
+/**
+ *
+ * @author Pavel Salamon <salampa1 at fel.cvut.cz>
+ */
+public class DevelopmentServlet  extends HttpServlet {
+
     @Override
     public void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
