@@ -8,7 +8,7 @@
   
   <queue>
     <name>pushqueue</name>
-    <rate>1/s</rate>
+    <rate>5/s</rate>
     <target>backend</target>
   </queue>
   
