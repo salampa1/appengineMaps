@@ -23,18 +23,20 @@ public class QueueHandler {
     
     double timegrid[][][];
     
+    public static final int SMUGGLERS_PER_TASK = 5;
+    
     public String provideIntel(int taskCount, HttpServletResponse resp) throws IOException {
         Queue queue;
 
         if (SystemProperty.environment.value() == SystemProperty.Environment.Value.Production) {
-            // if we are not app server, use pushqueue that targets backend module
+            // if we are in app server, use pushqueue that targets backend module
             queue = QueueFactory.getQueue("pushqueue");
         } else {
-            // if we are not local, use default queue that targets this module
+            // if we are in local, use default queue that targets this module
             queue = QueueFactory.getDefaultQueue();
         }
 
-        TaskOptions to = TaskOptions.Builder.withParam("smugglers", "10")
+        TaskOptions to = TaskOptions.Builder.withParam("smugglers", Integer.toString(SMUGGLERS_PER_TASK))
                 .url("/backend").method(TaskOptions.Method.POST);
 
         
@@ -43,7 +45,7 @@ public class QueueHandler {
         for (int i = 0; i < taskCount; i++) {
             queue.add(to);
         }
-
+       
         waitForResponses(taskCount, resp);
         
         

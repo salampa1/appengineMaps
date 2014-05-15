@@ -1,5 +1,7 @@
 package com.fel.appenginemaps.servlets;
 
+import com.fel.bond.grids.TimeGrid;
+import com.fel.bond.intel.IntelProvider;
 import com.google.appengine.api.taskqueue.Queue;
 import com.google.appengine.api.taskqueue.QueueFactory;
 import com.google.appengine.api.taskqueue.TaskOptions;
@@ -23,7 +25,6 @@ public class BackendServlet extends HttpServlet {
     public void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
 
-
         resp.setContentType("text/plain");
         resp.getWriter().println("This is a backend instance. \n\n");
 
@@ -32,12 +33,16 @@ public class BackendServlet extends HttpServlet {
         } else {
             resp.getWriter().println("This is response from local. \n\n");
         }
+        String parameter = req.getParameter("smugglers");
+        
+        int smugglers = Integer.parseInt(parameter);
 
-        //Properties p = System.getProperties();
-        //p.list(resp.getWriter());
+        TimeGrid t = IntelProvider.generateIntel(smugglers);
+        
+        // now add t in payload
+        
 
         Queue queue = QueueFactory.getQueue("pullqueue");
-
 
         TaskOptions to = TaskOptions.Builder.withMethod(TaskOptions.Method.PULL).payload("hello world");
 

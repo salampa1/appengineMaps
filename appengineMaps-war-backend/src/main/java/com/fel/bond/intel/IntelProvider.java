@@ -16,24 +16,21 @@ import org.joda.time.DateTime;
  */
 public class IntelProvider {
     // percent of the whole timespan in which smugglers sail out
-    public static final double ENTRY_TIME_LIMIT = 0.35; 
+    public static final double ENTRY_TIME_LIMIT = 0.33; 
     
-    // number of smuggler trajectories to embed
-    public static final int trajectoriesCount = 200;
+    public static final Point2d topLeftDeg = new Point2d(-97,40);
+    public static final Point2d bottomRightDeg = new Point2d(-97,40);
+    public static final double cellEdgeSizeDeg = 1;
+    public static final int timestepsNum = 30;
+    public static final int timestepDurationHours = 12;
 
     /**
      * Generates smuggler intelligence data.
-     * @param topLeftDeg
-     * @param bottomRightDeg
-     * @param cellEdgeSizeDeg
-     * @param date
      * @param timestepsNum
      * @param timestepDurationHours
      * @return
      */
-    public static TimeGrid generateIntel(Point2d topLeftDeg,
-            Point2d bottomRightDeg, double cellEdgeSizeDeg, DateTime date,
-            int timestepsNum, int timestepDurationHours) {
+    public static TimeGrid generateIntel(int trajectoriesCount) {
         Random random = Rand.getRandom();
 
         List<Point2d> smugglerEntryPoints = HarborProvider.getSmugglerEntryPoints();
@@ -53,7 +50,7 @@ public class IntelProvider {
                     Smuggler.EASTERN_INDIAN_OCEAN));
         }
 
-        TimeGrid intel = new TimeGrid(timestepsNum, date, timestepDurationHours);
+        TimeGrid intel = new TimeGrid(timestepsNum);
         Grid2D dummy = new Grid2D(topLeftDeg, bottomRightDeg, cellEdgeSizeDeg);
 
         List<Gaussian2d> toInclude = new ArrayList<>();

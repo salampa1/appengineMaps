@@ -22,6 +22,7 @@ public class Cell implements Cloneable, Serializable {
     
     public Cell(double centerX, double centerY) {
         this.center = new Point2d(centerX, centerY);
+        this.value = 0;
     }
     
     public Cell(double value) {
