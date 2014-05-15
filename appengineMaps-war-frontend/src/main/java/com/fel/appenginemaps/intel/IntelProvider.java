@@ -8,10 +8,12 @@ import com.google.appengine.api.taskqueue.TaskOptions;
 import com.google.appengine.api.taskqueue.TransientFailureException;
 import com.google.appengine.api.utils.SystemProperty;
 import com.google.apphosting.api.ApiProxy;
+import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  *
@@ -21,7 +23,7 @@ public class IntelProvider {
     
     double timegrid[][][];
     
-    public String provideIntel(int taskCount) {
+    public String provideIntel(int taskCount, HttpServletResponse resp) throws IOException {
         Queue queue;
 
         if (SystemProperty.environment.value() == SystemProperty.Environment.Value.Production) {
@@ -42,51 +44,59 @@ public class IntelProvider {
             queue.add(to);
         }
 
-        waitForResponses(taskCount);
+        waitForResponses(taskCount, resp);
         
         
         return null;
     }
     
     
-    private void waitForResponses(int taskCount) {
+    private void waitForResponses(int taskCount, HttpServletResponse resp) throws IOException {
         Queue pull = QueueFactory.getQueue("pullqueue");
         
         int done = 0;
 
         while (done < taskCount) {
-            int sleepDuration = 0;
+            long remainingMillis = ApiProxy.getCurrentEnvironment().getRemainingMillis();
+            
+            if (remainingMillis < 5000) {
+                pull.purge();
+                Queue push = QueueFactory.getQueue("pushqueue");
+                push.purge();
+                resp.getWriter().println("Only "+done+" tasks done.");
+                return;
+            }
+            
+            
+            boolean sleep = false;
             List<TaskHandle> leaseTasks = null;
 
             try {
                 leaseTasks = pull.leaseTasks(1, TimeUnit.HOURS, 10); // lease 10 tasks
             } catch (TransientFailureException e) {
-                sleepDuration = 500;
-            } catch (ApiProxy.ApiDeadlineExceededException e) {
-                sleepDuration = 500;
+                sleep = true;
             }
             
             if (leaseTasks != null) {
                 if (leaseTasks.isEmpty()) {
-                    sleepDuration = 500;
+                    sleep = true;
                 } else {
                     processResponses(leaseTasks);
                     done += leaseTasks.size();
                     pull.deleteTask(leaseTasks); // deleting done tasks
                 }
             }
-            
-            if (sleepDuration > 0) {
+            /*
+            if (sleep) {
                 try {
-                    Thread.sleep(sleepDuration);
+                    Thread.sleep(100);
                 } catch (InterruptedException ex) {
                     Logger.getLogger(IntelServlet.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 continue;
-            }
+            }*/
         }
         
-        //pull.purge();
     }
     
     

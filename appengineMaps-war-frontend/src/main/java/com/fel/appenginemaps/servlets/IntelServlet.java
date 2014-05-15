@@ -33,7 +33,7 @@ public class IntelServlet extends HttpServlet {
         resp.getWriter().println("Hello, this is a testing servlet. \n\n");
 
         IntelProvider ip = new IntelProvider();
-        ip.provideIntel(TASKS);
+        ip.provideIntel(TASKS, resp);
         
         resp.getWriter().println("All tasks were put back together, epic win. \n\n");
         
