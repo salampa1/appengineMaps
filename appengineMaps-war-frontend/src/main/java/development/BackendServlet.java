@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Pavel Salamon <salampa1 at fel.cvut.cz>
  */
-public class DevelopmentServlet  extends HttpServlet {
+public class BackendServlet  extends HttpServlet {
 
     @Override
     public void doGet(HttpServletRequest req, HttpServletResponse resp)

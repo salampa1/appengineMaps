@@ -11,7 +11,7 @@
     </servlet-mapping>
     <servlet>
         <servlet-name>development</servlet-name>
-        <servlet-class>development.DevelopmentServlet</servlet-class>
+        <servlet-class>development.BackendServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>development</servlet-name>
