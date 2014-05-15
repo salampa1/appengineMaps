@@ -85,6 +85,8 @@ public class IntelProvider {
                 continue;
             }
         }
+        
+        //pull.purge();
     }
     
     
@@ -92,7 +94,7 @@ public class IntelProvider {
         
         for (TaskHandle t : tasks) {
             byte[] payload = t.getPayload();
-            timegrid[0][0][0] = 0; // ...
+            //timegrid[0][0][0] = 0; // ...
         }
     }
 }

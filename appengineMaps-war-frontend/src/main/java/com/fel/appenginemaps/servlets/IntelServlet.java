@@ -21,11 +21,13 @@ import javax.servlet.http.HttpServletResponse;
 
 public class IntelServlet extends HttpServlet {
     
-    static int TASKS = 10;
+    static int TASKS = 70;
 
     @Override
     public void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
+        
+        long t = System.currentTimeMillis();
 
         resp.setContentType("text/plain");
         resp.getWriter().println("Hello, this is a testing servlet. \n\n");
@@ -34,6 +36,8 @@ public class IntelServlet extends HttpServlet {
         ip.provideIntel(TASKS);
         
         resp.getWriter().println("All tasks were put back together, epic win. \n\n");
+        
+        resp.getWriter().println((System.currentTimeMillis() - t)/1000d +" seconds." );
 
 
     }
