@@ -1,6 +1,6 @@
 package com.fel.appenginemaps.servlets;
 
-import com.fel.appenginemaps.intel.IntelProvider;
+import com.fel.appenginemaps.intel.QueueHandler;
 import com.google.appengine.api.taskqueue.Queue;
 import com.google.appengine.api.taskqueue.QueueFactory;
 import com.google.appengine.api.taskqueue.TaskHandle;
@@ -32,7 +32,7 @@ public class IntelServlet extends HttpServlet {
         resp.setContentType("text/plain");
         resp.getWriter().println("Hello, this is a testing servlet. \n\n");
 
-        IntelProvider ip = new IntelProvider();
+        QueueHandler ip = new QueueHandler();
         ip.provideIntel(TASKS, resp);
         
         resp.getWriter().println("All tasks were put back together, epic win. \n\n");

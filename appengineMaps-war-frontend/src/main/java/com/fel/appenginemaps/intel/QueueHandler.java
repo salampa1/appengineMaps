@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Pavel Salamon <salampa1 at fel.cvut.cz>
  */
-public class IntelProvider {
+public class QueueHandler {
     
     double timegrid[][][];
     
