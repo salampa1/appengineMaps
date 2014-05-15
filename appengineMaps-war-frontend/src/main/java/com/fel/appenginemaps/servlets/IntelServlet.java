@@ -1,6 +1,7 @@
 package com.fel.appenginemaps.servlets;
 
 import com.fel.appenginemaps.intel.QueueHandler;
+import com.fel.bond.grids.TimeGrid;
 import com.google.appengine.api.taskqueue.Queue;
 import com.google.appengine.api.taskqueue.QueueFactory;
 import com.google.appengine.api.taskqueue.TaskHandle;
@@ -8,6 +9,7 @@ import com.google.appengine.api.taskqueue.TaskOptions;
 import com.google.appengine.api.taskqueue.TransientFailureException;
 import com.google.appengine.api.utils.SystemProperty;
 import com.google.apphosting.api.ApiProxy.ApiDeadlineExceededException;
+import com.google.gson.Gson;
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.Future;
@@ -30,14 +32,18 @@ public class IntelServlet extends HttpServlet {
         long t = System.currentTimeMillis();
 
         resp.setContentType("text/plain");
-        resp.getWriter().println("Hello, this is a testing servlet. \n\n");
-
         QueueHandler ip = new QueueHandler();
-        ip.provideIntel(TASKS, resp);
+        TimeGrid intel = ip.provideIntel(TASKS, resp);
         
-        resp.getWriter().println("All "+TASKS+" tasks were put back together, epic win. \n\n");
+        
+        
+        resp.getWriter().println("All "+TASKS+" tasks were put back together. \n\n");
         
         resp.getWriter().println((System.currentTimeMillis() - t)/1000d +" seconds." );
+        
+        Gson g = new Gson();
+        
+        resp.getWriter().println(g.toJson(intel));
 
 
     }

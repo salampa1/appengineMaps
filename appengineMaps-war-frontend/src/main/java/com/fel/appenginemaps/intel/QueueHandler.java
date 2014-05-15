@@ -1,6 +1,7 @@
 package com.fel.appenginemaps.intel;
 
-import com.fel.appenginemaps.servlets.IntelServlet;
+import com.fel.bond.grids.TimeGrid;
+import com.fel.bond.utility.Serializer;
 import com.google.appengine.api.taskqueue.Queue;
 import com.google.appengine.api.taskqueue.QueueFactory;
 import com.google.appengine.api.taskqueue.TaskHandle;
@@ -21,11 +22,10 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class QueueHandler {
     
-    double timegrid[][][];
-    
+    TimeGrid timegrid;
     public static final int SMUGGLERS_PER_TASK = 5;
     
-    public String provideIntel(int taskCount, HttpServletResponse resp) throws IOException {
+    public TimeGrid provideIntel(int taskCount, HttpServletResponse resp) throws IOException {
         Queue queue;
 
         if (SystemProperty.environment.value() == SystemProperty.Environment.Value.Production) {
@@ -49,7 +49,7 @@ public class QueueHandler {
         waitForResponses(taskCount, resp);
         
         
-        return null;
+        return timegrid;
     }
     
     
@@ -106,7 +106,31 @@ public class QueueHandler {
         
         for (TaskHandle t : tasks) {
             byte[] payload = t.getPayload();
-            //timegrid[0][0][0] = 0; // ...
+            TimeGrid taskOutput = null;
+            try {
+                taskOutput = (TimeGrid) Serializer.deserialize(payload);
+            } catch (IOException ex) {
+                Logger.getLogger(QueueHandler.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(QueueHandler.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+            if (timegrid==null && taskOutput != null) {
+                timegrid = taskOutput;
+            } else if (taskOutput != null) {
+                joinTimeGrid(taskOutput);
+            }
+        }
+    }
+    
+    private void joinTimeGrid(TimeGrid join) {
+        for (int t = 0; t < timegrid.getTimeStepsNum(); t++) {
+            for (int row = 0; row < timegrid.getRowSize(); row++) {
+                for (int col = 0; col < timegrid.getColSize(); col++) {
+                    double newValue = timegrid.getValue(t, row, col) + join.getValue(t, row, col);
+                    timegrid.setValue(t, row, col, newValue);
+                }
+            }
         }
     }
 }
