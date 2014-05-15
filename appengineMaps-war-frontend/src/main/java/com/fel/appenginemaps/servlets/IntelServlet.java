@@ -35,7 +35,7 @@ public class IntelServlet extends HttpServlet {
         QueueHandler ip = new QueueHandler();
         ip.provideIntel(TASKS, resp);
         
-        resp.getWriter().println("All tasks were put back together, epic win. \n\n");
+        resp.getWriter().println("All "+TASKS+" tasks were put back together, epic win. \n\n");
         
         resp.getWriter().println((System.currentTimeMillis() - t)/1000d +" seconds." );
 
