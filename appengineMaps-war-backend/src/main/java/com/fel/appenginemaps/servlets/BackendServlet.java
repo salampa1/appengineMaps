@@ -2,6 +2,7 @@ package com.fel.appenginemaps.servlets;
 
 import com.fel.bond.grids.TimeGrid;
 import com.fel.bond.intel.IntelProvider;
+import com.fel.bond.utility.Serializer;
 import com.google.appengine.api.taskqueue.Queue;
 import com.google.appengine.api.taskqueue.QueueFactory;
 import com.google.appengine.api.taskqueue.TaskOptions;
@@ -38,13 +39,14 @@ public class BackendServlet extends HttpServlet {
         int smugglers = Integer.parseInt(parameter);
 
         TimeGrid t = IntelProvider.generateIntel(smugglers);
-        
         // now add t in payload
+        
+        byte[] payload = Serializer.serialize(t);
         
 
         Queue queue = QueueFactory.getQueue("pullqueue");
 
-        TaskOptions to = TaskOptions.Builder.withMethod(TaskOptions.Method.PULL).payload("hello world");
+        TaskOptions to = TaskOptions.Builder.withMethod(TaskOptions.Method.PULL).payload(payload);
 
         queue.add(to);
         resp.getWriter().println("Added to pullqueue! \n\n");
